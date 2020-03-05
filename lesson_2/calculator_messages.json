@@ -1,0 +1,21 @@
+{
+  "en" : {
+"welcome": "Welcome to calculator! Please enter your Name:",
+"errorMessage": "Hmm, You have not entered the valid number. Please try again:",
+"firstNumber" : "Please enter the first number:",
+"secondNumber" : "Please enter the second number:",
+"operatorSelection": "What operation would you like to perform?\nPress 1) Add 2) Subtract 3) Multiply 4) Divide",
+"operatorError" : "You must choose 1, 2, 3 or 4",
+"repeatCalc" : "Would you like to perform another calculation? y/n"
+},
+
+ "pn": { 
+"welcome": "ਕੈਲਕੁਲੇਟਰ ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ! ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ:",
+"errorMessage": "ਨਹੀਂ, ਤੁਸੀਂ ਸਹੀ ਨੰਬਰ ਦਾਖਲ ਨਹੀਂ ਕੀਤਾ ਹੈ. ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ:",
+"firstNumber" : "ਕਿਰਪਾ ਕਰਕੇ ਪਹਿਲਾ ਨੰਬਰ ਦਰਜ ਕਰੋ:",
+"secondNumber" : "ਕਿਰਪਾ ਕਰਕੇ ਦੂਜਾ ਨੰਬਰ ਦਰਜ ਕਰੋ:",
+"operatorSelection" : "ਤੁਸੀਂ ਕਿਹੜੀ ਗਣਨਾ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? ਦਬਾਓ /n 1) ਜੋੜ 2) ਘਟਾਓ 3) ਗੁਣਾ 4) ਵੰਡੋ",
+"operatorError" :  "ਤੁਹਾਨੂੰ 1, 2, 3 ਜਾਂ 4 ਦੀ ਚੋਣ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ",
+"repeatCalc" :  "ਕੀ ਤੁਸੀਂ ਕੋਈ ਹੋਰ ਗਣਨਾ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? Y / n"
+}
+}
