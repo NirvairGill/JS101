@@ -1,0 +1,16 @@
+{
+  "welcome" : "Welcome to the Mortgage/Car loan Calculator.",
+  "blank" : "-------------------------------------------- \n",
+  "inputTotal" : "Please enter the total loan amount: ",
+  "inputTotalError" : "Oops! The loan amount should be in the range 100 - 10000000. Please re-enter:",
+  "inputApr" : "Please enter the Annual Percentage Rate(APR). If APR is 5%, then enter 5: ",
+  "inputAprError" : "Oops! The Apr should be in the range 0 - 100. Please re-enter APR:",
+  "inputDuration" : "Please enter the loan duration in years:",
+  "inputDurationError" : "Oops! The loan duration must be in between 0 to 10. Please re-enter:",
+  "anotherCalc" : "Would you like to do another calculation? Enter (y/n)",
+  "seeYou" : "See you again!"
+
+
+
+
+}
