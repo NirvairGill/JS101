@@ -2,6 +2,12 @@ const RLSYNC = require('readline-sync');
 
 const MESSAGES = require('./Mortgage_calculator.json');
 
+const clearScreen = () => {
+  console.log();
+}
+
+clearScreen();
+
 const prompt = input => {
   console.log(`=> ${input}`);
 };
@@ -82,5 +88,5 @@ while (true) {
     break;
   }
 
-  console.clear();
+  clearScreen();
 }
