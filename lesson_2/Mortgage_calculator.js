@@ -3,8 +3,8 @@ const RLSYNC = require('readline-sync');
 const MESSAGES = require('./Mortgage_calculator.json');
 
 const clearScreen = () => {
-  console.log();
-}
+  console.clear();
+};
 
 clearScreen();
 
