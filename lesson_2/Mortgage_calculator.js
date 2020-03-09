@@ -12,76 +12,96 @@ const prompt = input => {
   console.log(`=> ${input}`);
 };
 
+const getLoanAmount = () => {
+  prompt(MESSAGES['inputTotal']);
+  return Math.round(RLSYNC.question());
+};
+
+const getApr = () => {
+  prompt(MESSAGES['inputApr']);
+  return RLSYNC.question();
+};
+
+const getDurationInYears = () => {
+  prompt(MESSAGES['inputDuration']);
+  return RLSYNC.question();
+};
+
 const validateLoanAmount = number => {
   return +number < 100 || +number > 10000000 || Number.isNaN(+number);
+};
+
+const displayLoanAmountError = () => {
+  prompt(MESSAGES['inputTotalError']);
+  return RLSYNC.question();
 };
 
 const validateApr = number => {
   return Number.isNaN(+number) || +number === '' || +number < 0 || +number > 100;
 };
 
+const displayAprError = () => {
+  prompt('inputAprError');
+  return RLSYNC.question();
+};
+
 const validateDuration = number => {
   return Number.isNaN(+number) || +number === 0 || +number <= 0 || +number > 50;
+};
+
+const displayDurationError = () => {
+  prompt(MESSAGES['inputDurationError']);
+  return RLSYNC.question();
+};
+
+const getResponse = () => {
+  return RLSYNC.question().toLowerCase();
 };
 
 prompt(MESSAGES['welcome']);
 prompt(MESSAGES['blank']);
 
 while (true) {
-  prompt(MESSAGES['inputTotal']);
-  let loanAmount = RLSYNC.question();
-  loanAmount = Math.round(loanAmount);
+  let loanAmount = getLoanAmount();
 
   while (validateLoanAmount(loanAmount)) {
-    prompt(MESSAGES['inputTotalError']);
-    loanAmount = RLSYNC.question();
+    loanAmount = displayLoanAmountError();
   }
 
-  prompt(MESSAGES['inputApr']);
-  let annualRate = RLSYNC.question();
+  let annualPR = getApr();
 
-  while (validateApr(annualRate)) {
-    prompt('inputAprError');
-    annualRate = RLSYNC.question();
+  while (validateApr(annualPR)) {
+    annualPR = displayAprError();
   }
 
-  prompt(MESSAGES['inputDuration']);
-  let durationInYears = RLSYNC.question();
+  let durationInYears = getDurationInYears();
 
   while (validateDuration(durationInYears)) {
-    prompt(MESSAGES['inputDurationError']);
-    durationInYears = RLSYNC.question();
+    durationInYears = displayDurationError();
   }
 
-  let monthlyRate = +annualRate / 100 / 12;
+  let monthlyPR = +annualPR / 100 / 12;
   let durationInMonths = +durationInYears * 12;
 
-  const loanCalculator = (amount, apr, duration) => {
-    // eslint-disable-next-line id-length
-    let p = +amount; // p represents the loan amount
-    // eslint-disable-next-line id-length
+  const calculateMonthlyPayment = (totalAmt, monthlyRate, durationMonths) => {
+    let monthlyPayment;
 
-    let j = +apr; // j represents monthly percentage rate
-    // eslint-disable-next-line id-length
-
-    let n = +duration; // n represents loan duration in months
-    // eslint-disable-next-line id-length
-
-    let m; // m represents the monthly payment
-
-    if (j === 0) {
-      m = p / n;
+    if (monthlyRate === 0) {
+      monthlyPayment = totalAmt / durationMonths;
     } else {
-      m = p * (j / (1 - Math.pow(1 + j, -n)));
+      monthlyPayment = totalAmt * (monthlyRate /
+        (1 - Math.pow(1 + monthlyRate, -durationMonths)));
     }
 
-    return m;
+    return monthlyPayment;
   };
 
-  let result = loanCalculator(loanAmount, monthlyRate, durationInMonths);
-  prompt(`Your monthly payment would be $${result.toFixed(2)} for the loan duration ${Math.round(durationInMonths)} months \n`);
+  let result = calculateMonthlyPayment(loanAmount, monthlyPR, durationInMonths);
+
+  prompt(`Your monthly installment would be $${result.toFixed(2)} for ${Math.round(durationInMonths)} months for the Loan amount of $${loanAmount} with APR ${annualPR}% \n`);
+
   prompt(MESSAGES['anotherCalc']);
-  let answer = RLSYNC.question().toLowerCase();
+  let answer = getResponse();
 
   if (answer[0] !== 'y') {
     prompt(MESSAGES['seeYou']);
