@@ -1,0 +1,10 @@
+{
+"welcome": "Let's start! It's a game of best of 5 wins. Good Luck!",
+"userName": "Please enter your Name: ",
+"startGame": "Choose one: Enter 'r' for Rock, 'p' for Paper, 'sc' for Scissor, 'l' for Lizard and 'sp' for Spock:",
+"invalidChoice": "Invalid Input! Please re-enter the choice: ",
+"choiceSError": "Please enter 'sc' or 'sp' for Scissor and Spock respectively",
+"playAgain": "Play again?(y/n)",
+"invalidPlayAgain": "Invalid choice! Please enter y or n :",
+"seeYou": "See You again!"
+}
