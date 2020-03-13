@@ -33,7 +33,6 @@ const validateLoanAmount = number => {
 
 const displayLoanAmountError = () => {
   prompt(MESSAGES['inputTotalError']);
-  return RLSYNC.question();
 };
 
 const validateApr = number => {
@@ -41,8 +40,7 @@ const validateApr = number => {
 };
 
 const displayAprError = () => {
-  prompt('inputAprError');
-  return RLSYNC.question();
+  prompt(MESSAGES['inputAprError']);
 };
 
 const validateDuration = number => {
@@ -51,7 +49,6 @@ const validateDuration = number => {
 
 const displayDurationError = () => {
   prompt(MESSAGES['inputDurationError']);
-  return RLSYNC.question();
 };
 
 const getResponse = () => {
@@ -65,19 +62,21 @@ while (true) {
   let loanAmount = getLoanAmount();
 
   while (validateLoanAmount(loanAmount)) {
-    loanAmount = displayLoanAmountError();
+    displayLoanAmountError();
+    loanAmount = getLoanAmount();
   }
 
   let annualPR = getApr();
 
   while (validateApr(annualPR)) {
-    annualPR = displayAprError();
+    displayAprError();
+    annualPR = getApr();
   }
-
   let durationInYears = getDurationInYears();
 
   while (validateDuration(durationInYears)) {
-    durationInYears = displayDurationError();
+     displayDurationError();
+     durationInYears = getDurationInYears();
   }
 
   let monthlyPR = +annualPR / 100 / 12;
@@ -102,8 +101,12 @@ while (true) {
 
   prompt(MESSAGES['anotherCalc']);
   let answer = getResponse();
+  while (answer.toLowerCase()[0] !== 'y' && answer.toLowerCase()[0] !== 'n') {
 
-  if (answer[0] !== 'y') {
+    prompt(MESSAGES['anotherCalcError']);
+    answer = getResponse();
+  }
+  if (answer[0] === 'n') {
     prompt(MESSAGES['seeYou']);
     break;
   }

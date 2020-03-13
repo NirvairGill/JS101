@@ -43,26 +43,25 @@ const validateUserChoice = choice => {
 };
 
 const displayUserChoiceError = choice => {
-  prompt(MESSAGES['invalidChoice']);
-
   if (choice === 's') {
     prompt(MESSAGES['choiceSError']);
     lineBreak();
   }
+  prompt(MESSAGES['invalidChoice']);
+};
 
-  return getUserChoice();
+const findIndex = choice => {
+  return VALID_USER_CHOICES.indexOf(choice);
 };
 
 const displayChoices = (name, choice, compChoice) => {
-  let indexOfChoice = VALID_USER_CHOICES.indexOf(choice); // Get index number of the user choice.
-  let indexOfCompChoice = VALID_USER_CHOICES.indexOf(compChoice); // Get index number of the computer choice.
-  prompt(`${name} chose ${VALID_CHOICES[indexOfChoice]} and Computer chose ${VALID_CHOICES[indexOfCompChoice]}`);
+  prompt(`${name} chose ${VALID_CHOICES[findIndex(choice)]} and Computer chose ${VALID_CHOICES[findIndex(compChoice)]}`);
 };
 
 const playerWins = (choice, compChoice) => {
-  let userChoice = VALID_CHOICES[VALID_USER_CHOICES.indexOf(choice)];
-  let indexOfCompChoice = VALID_USER_CHOICES.indexOf(compChoice);
-  return WINNING_COMBOS[userChoice].includes(VALID_CHOICES[indexOfCompChoice]);
+  choice = VALID_CHOICES[findIndex(choice)];
+  compChoice = VALID_CHOICES[findIndex(compChoice)];
+  return WINNING_COMBOS[choice].includes(compChoice);
 };
 
 let result;
@@ -83,7 +82,7 @@ const grandWinner = (playerName, userCount, computerCount) => {
   if (userCount === 5) {
     prompt(`${playerName} is the Grand Winner!!`);
   } else if (computerCount === 5) {
-    prompt(`${playerName} lost!! Computer Won!`);
+    prompt(`${playerName} lost :( Computer is the Grand Winner!`);
   }
 };
 
@@ -105,7 +104,8 @@ while (true) {
 
     while (validateUserChoice(userChoice)) {
       clearScreen();
-      userChoice = displayUserChoiceError(userChoice);
+      displayUserChoiceError(userChoice);
+      userChoice = getUserChoice();
     }
 
     let randomIndex = Math.round(Math.random() * (VALID_CHOICES.length - 1));
