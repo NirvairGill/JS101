@@ -1,10 +1,11 @@
 {
-"welcome": "Let's start! It's a game of best of 5 wins. Good Luck!",
+"welcome": "Welcome to Rock > Paper > Scissor > Lizard > Spock. Good Luck!",
+"startingPrompt" : "It's a race to Five. Whoever finishes first will be the Grand Winner!",
 "userName": "Please enter your Name: ",
 "startGame": "Choose one: Enter 'r' for Rock, 'p' for Paper, 'sc' for Scissor, 'l' for Lizard and 'sp' for Spock:",
 "invalidChoice": "Invalid Input! Please re-enter the choice: ",
 "choiceSError": "Please enter 'sc' or 'sp' for Scissor and Spock respectively",
 "playAgain": "Play again?(y/n)",
-"invalidPlayAgain": "Invalid choice! Please enter y or n :",
+"playAgainMessage": "Press y to continue playing Or any other key to Exit :",
 "seeYou": "See You again!"
 }

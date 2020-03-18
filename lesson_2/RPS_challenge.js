@@ -33,12 +33,12 @@ const getUserName = () => {
   return RLSYNC.question();
 };
 
-const getUserChoice = () => {
-  prompt(MESSAGES['startGame']);
-  return RLSYNC.question().toLowerCase();
+const displayGamePrompt = () => {
+  clearScreen();
+  prompt(MESSAGES['startingPrompt']);
 };
 
-const validateUserChoice = choice => {
+const isValidateUserChoice = choice => {
   return !VALID_USER_CHOICES.includes(choice);
 };
 
@@ -47,7 +47,27 @@ const displayUserChoiceError = choice => {
     prompt(MESSAGES['choiceSError']);
     lineBreak();
   }
+
   prompt(MESSAGES['invalidChoice']);
+};
+
+const getUserChoice = () => {
+  prompt(MESSAGES['startGame']);
+  let userPick = RLSYNC.question().toLowerCase();
+
+  while (isValidateUserChoice(userPick)) {
+    clearScreen();
+    displayUserChoiceError(userPick);
+    userPick = getUserChoice();
+  }
+
+  return userPick;
+};
+
+const getComputerChoice = () => {
+  let randomIndex = Math.round(Math.random() * (VALID_CHOICES.length - 1));
+  let computerPick = VALID_USER_CHOICES[randomIndex];
+  return computerPick;
 };
 
 const findIndex = choice => {
@@ -64,18 +84,24 @@ const playerWins = (choice, compChoice) => {
   return WINNING_COMBOS[choice].includes(compChoice);
 };
 
-let result;
+const displayGameWinner = (choice, compChoice) => {
 
-const displayWinner = (choice, compChoice) => {
   if (playerWins(choice, compChoice)) {
-    result = 'You Win!';
+    prompt('You Win!');
   } else if (playerWins(compChoice, choice)) {
-    result = 'Computer Wins!';
+    prompt('Computer Wins!');
   } else {
-    result = 'It\'s a Tie!';
+    prompt('It\'s a Tie!');
   }
 
-  return result;
+};
+
+const updateScore = (choice, compChoice) => {
+  if (playerWins(choice, compChoice)) {
+    return 1;
+  }
+
+  return 0;
 };
 
 const grandWinner = (playerName, userCount, computerCount) => {
@@ -84,6 +110,14 @@ const grandWinner = (playerName, userCount, computerCount) => {
   } else if (computerCount === 5) {
     prompt(`${playerName} lost :( Computer is the Grand Winner!`);
   }
+};
+
+const playAgain = () => {
+  lineBreak();
+  prompt(MESSAGES['playAgain']);
+  prompt(MESSAGES['playAgainMessage']);
+  let response = RLSYNC.question().toLowerCase();
+  return response[0] === 'y';
 };
 
 clearScreen();
@@ -96,32 +130,22 @@ while (true) {
   let userWinCount = 0;
   let computerWinCount = 0;
 
-  while (true) {
+  displayGamePrompt();
 
+  while (true) {
     let userChoice = getUserChoice();
+    let computerChoice = getComputerChoice();
 
     clearScreen();
 
-    while (validateUserChoice(userChoice)) {
-      clearScreen();
-      displayUserChoiceError(userChoice);
-      userChoice = getUserChoice();
-    }
-
-    let randomIndex = Math.round(Math.random() * (VALID_CHOICES.length - 1));
-    let computerChoice = VALID_USER_CHOICES[randomIndex];
-
     displayChoices(userName, userChoice, computerChoice);
 
-    prompt(displayWinner(userChoice, computerChoice));
+    displayGameWinner(userChoice, computerChoice);
+
+    userWinCount += updateScore(userChoice, computerChoice);
+    computerWinCount += updateScore(computerChoice, userChoice);
 
     lineBreak();
-
-    if (result === 'You Win!') {
-      userWinCount += 1;
-    } else if (result === 'Computer Wins!') {
-      computerWinCount += 1;
-    }
 
     prompt(`${userName} score is ${userWinCount}  and computer score is ${computerWinCount}`);
 
@@ -134,20 +158,8 @@ while (true) {
     }
   }
 
+  if (!playAgain()) break;
   lineBreak();
-
-  prompt(MESSAGES['playAgain']);
-  let response = RLSYNC.question();
-
-  while (response.toLowerCase()[0] !== 'y' && response.toLowerCase()[0] !== 'n') {
-    prompt(MESSAGES['invalidPlayAgain']);
-    response = RLSYNC.question();
-  }
-
-  if (response.toLowerCase()[0] === 'n') {
-    prompt(MESSAGES['seeYou']);
-    break;
-  }
-
-  clearScreen();
 }
+
+prompt(MESSAGES['seeYou']);
