@@ -150,7 +150,7 @@ function minimax(board, player) {
 }
 
 function bestMoveComputer(array) {
-  let bestScore = -10000;
+  let bestScore = -Infinity;
   let bestMove;
 
   for (let index = 0; index < array.length; index += 1) {
@@ -164,7 +164,7 @@ function bestMoveComputer(array) {
 }
 
 function bestMoveHuman(array) {
-  let bestScore = 10000;
+  let bestScore = Infinity;
   let bestMove;
 
   for (let index = 0; index < array.length; index += 1) {
