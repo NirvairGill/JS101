@@ -19,6 +19,7 @@ const SUITS = ['Club', 'Spade', 'Diamond', 'Hearts'];
 const VALUES = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 const DEALER_STAYS = 17;
 const TARGET = 21;
+const WINNING_SCORE = 5;
 
 const prompt = msg => {
   console.log(`=> ${msg}`);
@@ -79,12 +80,12 @@ const displayHand = hand => {
 const displayFirstHand = (player, dealer) => {
   lineBreak();
   prompt('Dealer deals first hand..');
-  prompt(`You have: ${player[0][1]} of ${player[0][0]} and ${player[1][1]} of ${player[1][0]}`);
+  prompt(`Player has: ${player[0][1]} of ${player[0][0]} and ${player[1][1]} of ${player[1][0]}`);
   prompt(`Dealer has: ${dealer[0][1]} of ${dealer[0][0]} and unknown card`);
   lineBreak();
 };
 
-const sumOfCards = hand => {
+const calculateSumOfCards = hand => {
   let handValues = hand.map(card => card[2]);
   let sum = handValues.reduce((acc, val) => acc + val);
   handValues.filter(value => value === 11).forEach(_ => {
@@ -93,6 +94,10 @@ const sumOfCards = hand => {
     }
   });
   return sum;
+};
+
+const promptPlayerHand = (hand, total) => {
+  prompt(`Player has: ${displayHand(hand)} and Player total is ${total}`);
 };
 
 const isBusted = total => {
@@ -107,22 +112,33 @@ const dealerStays = total => {
   lineBreak();
 };
 
-const dealerHits = (hand, total, deck) => {
-  prompt(`Dealer has: ${displayHand(hand)} and dealer total is ${total}`);
-
-  while (total <= DEALER_STAYS) {
-    prompt(`Dealer hits...`);
-    hand.push(dealHand(deck));
-    total = sumOfCards(hand);
-    prompt(`Dealer has now: ${displayHand(hand)} and dealer total is ${total}`);
-  }
-
+const dealerBustedOrStay = total => {
   if (isBusted(total)) {
     prompt('Dealer busted!');
   } else {
     dealerStays(total);
   }
+};
 
+const promptDealerHand = (hand, total) => {
+  prompt(`Dealer has: ${displayHand(hand)} and dealer total is ${total}`);
+};
+
+const hit = (hand, deck) => {
+  return hand.push(dealHand(deck));
+};
+
+const dealerTurn = (hand, total, deck) => {
+  promptDealerHand(hand, total);
+
+  while (total <= DEALER_STAYS) {
+    prompt(`Dealer hits...`);
+    hit(hand, deck);
+    total = calculateSumOfCards(hand);
+    promptDealerHand(hand, total);
+  }
+
+  dealerBustedOrStay(total);
   return hand;
 };
 
@@ -155,7 +171,7 @@ const displayScore = scores => {
 };
 
 const grandWinner = scores => {
-  return scores['Player'] >= 5 || scores['Dealer'] >= 5;
+  return scores['Player'] >= WINNING_SCORE || scores['Dealer'] >= WINNING_SCORE;
 };
 
 const promptHitOrStay = () => {
@@ -168,18 +184,23 @@ const promptHitOrStay = () => {
     prompt('Invalid choice! Please enter (h)it or (s)tay: ');
   }
 
-  return answer;
+  return answer[0];
+};
+
+const playerStayPrompt = () => {
+  prompt(`Player chose to stay!`);
+  lineBreak();
+  prompt('Dealer\'s Turn...');
 };
 
 const hitOrStay = (playerHand, dealerHand, playerTotal, dealerTotal, deck) => {
   let answer = promptHitOrStay();
 
   while (answer === 'h') {
-    prompt(`You chose to hit..`);
-    playerHand.push(dealHand(deck));
-    playerTotal = sumOfCards(playerHand);
-    prompt(`You have: ${displayHand(playerHand)} and Your total is ${playerTotal}`);
-
+    prompt(`Player chose to hit..`);
+    hit(playerHand, deck);
+    playerTotal = calculateSumOfCards(playerHand);
+    promptPlayerHand(playerHand, playerTotal);
     if (isBusted(playerTotal)) {
       prompt('Player busted!');
       break;
@@ -189,10 +210,8 @@ const hitOrStay = (playerHand, dealerHand, playerTotal, dealerTotal, deck) => {
   }
 
   if (answer === 's') {
-    prompt(`You chose to stay!`);
-    lineBreak();
-    prompt('Dealer\'s Turn...');
-    dealerHits(dealerHand, dealerTotal, deck);
+    playerStayPrompt();
+    dealerTurn(dealerHand, dealerTotal, deck);
   }
 };
 
@@ -238,14 +257,19 @@ const displayRoundWinner = (playerTotal, dealerTotal) => {
 };
 
 const displayGrandWinner = scores => {
-  if (scores.Player >= 5) {
-    console.log('Player is the Grand Winner!!');
-  } else if (scores.Dealer >= 5) {
-    console.log('Dealer is the Grand Winner!!');
+  if (scores.Player >= WINNING_SCORE) {
+    prompt('Player is the Grand Winner!!');
+  } else if (scores.Dealer >= WINNING_SCORE) {
+    prompt('Dealer is the Grand Winner!!');
   }
 
   console.log(' ');
 };
+
+const gameNotWon = (scores) => {
+  return !grandWinner(scores);
+};
+
 
 const playAgain = () => {
   prompt('Would you like to play again? (y/n)');
@@ -256,7 +280,7 @@ const playAgain = () => {
     response = readline.question().toLowerCase();
   }
 
-  return ['y', 'yes', 'n', 'no'].includes(response);
+  return ['y', 'yes'].includes(response);
 };
 
 const startRound = scores => {
@@ -265,11 +289,11 @@ const startRound = scores => {
   let dealerHand = firstHand(deck);
   displayScore(scores);
   displayFirstHand(playerHand, dealerHand);
-  let playerTotal = sumOfCards(playerHand);
-  let dealerTotal = sumOfCards(dealerHand);
+  let playerTotal = calculateSumOfCards(playerHand);
+  let dealerTotal = calculateSumOfCards(dealerHand);
   hitOrStay(playerHand, dealerHand, playerTotal, dealerTotal, deck);
-  playerTotal = sumOfCards(playerHand);
-  dealerTotal = sumOfCards(dealerHand);
+  playerTotal = calculateSumOfCards(playerHand);
+  dealerTotal = calculateSumOfCards(dealerHand);
   detectRoundWinner(playerTotal, dealerTotal);
   updateScore(scores, playerTotal, dealerTotal);
   displayRoundWinner(playerTotal, dealerTotal);
@@ -281,10 +305,10 @@ const startGame = () => {
   welcomeMessage();
   let scores = setScore();
 
-  while (!grandWinner(scores)) {
+  while (gameNotWon(scores)) {
     startRound(scores);
 
-    if (!grandWinner(scores)) {
+    if (gameNotWon(scores)) {
       continueNextRound();
     }
   }
